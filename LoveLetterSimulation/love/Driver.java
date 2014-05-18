@@ -22,7 +22,7 @@ public class Driver {
 		for (Player currentPlayer : players){
 			while(newDeck.hasCards()){
 				currentPlayer.draw(newDeck);
-				System.out.println(currentPlayer + "\n\tPlays: " + currentPlayer.play());
+				System.out.println(currentPlayer + "\n\tPlays: " + currentPlayer.play(players));
 			}
 		}
 	}
