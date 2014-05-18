@@ -12,12 +12,20 @@ public class Driver {
 	public Driver(int numPlayers)
 	{
 		Deck newDeck = new Deck(numPlayers);
+		System.out.println("New Deck: " + newDeck);
 		players = new Player[numPlayers];
-		 for(int i=0; i<numPlayers; i++)
+		for(int i=0; i<numPlayers; i++){
+			Player player = new Player();
+			player.draw(newDeck);
+			players[i] = player;
+		}
 			 
-		while(newDeck.hasCards())
-		{
-			
+		for (Player currentPlayer : players){
+			while(newDeck.hasCards()){
+				currentPlayer.draw(newDeck);
+				System.out.println(currentPlayer + "\n-plays-");
+				System.out.println(currentPlayer.play());
+			}
 		}
 	}
 

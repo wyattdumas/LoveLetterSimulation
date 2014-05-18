@@ -15,8 +15,8 @@ public class Player {
 		hand.add(drawPile.drawTopCard());		
 	}
 	
-	public void play(){		
-		System.out.println(hand.remove(0));
+	public Card play(){		
+		return hand.remove(0);
 	}	
 	
 	public String toString(){
