@@ -10,6 +10,6 @@ public class Card {
 		number = num;
 	}
 	public String toString() {
-		return "Card Value: " + value + "Number:" + number + " Text:" + text;
+		return "Card Value: " + value + " Number:" + number + " Text:" + text;
 	}
 }

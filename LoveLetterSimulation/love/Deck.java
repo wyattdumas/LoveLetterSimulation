@@ -45,16 +45,16 @@ public class Deck {
 		return !available.isEmpty();
 	}
 	
-	public String ToString() {
+	public String toString() {
 		String output;
 		
-		output = "Available Pile \n";
+		output = "\nAvailable Pile \n";
 		for(int i = 0; i < available.size(); i++) {
-			output += available.elementAt(i);
+			output += "\t" + available.elementAt(i) + "\n";
 		}
-		output = "Discard Pile \n";
+		output += "Discard Pile \n";
 		for(int i = 0; i < discard.size(); i++) {
-			output += discard.elementAt(i);
+			output += "\t" + discard.elementAt(i) + "\n";
 		}
 		return output;
 	}
