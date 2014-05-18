@@ -29,11 +29,23 @@ public class Player {
 			case "Princess": discardPile.add(card2);
 					hand.remove(1);
 					return card2;
+					break;
 			default: discardPile.add(card1);
 					hand.remove(0);
 					return card1;
+					break;
 		
 		}
+	
+		/*for (Player opponent : players){
+			if (opponent.getPosition() != position){
+				
+			}
+		}*/
+		// Just in case!
+		discardPile.add(card1);
+		hand.remove(0);
+		return card1;
 	}
 	
 	public int getPosition() { return position; }
