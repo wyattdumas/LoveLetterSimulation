@@ -5,7 +5,7 @@ public class Driver {
 	private Player[] players;
 	
 	public static void main(String[] args) {
-		System.out.println("Hello World");
+		System.out.println("Start of Program");
 		new Driver(2);
 	}
 	
@@ -15,9 +15,8 @@ public class Driver {
 		System.out.println("New Deck: " + newDeck);
 		players = new Player[numPlayers];
 		for(int i=0; i<numPlayers; i++){
-			Player player = new Player();
-			player.draw(newDeck);
-			players[i] = player;
+			players[i] = new Player();
+			players[i].draw(newDeck);
 		}
 			 
 		for (Player currentPlayer : players){
