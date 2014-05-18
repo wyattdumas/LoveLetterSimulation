@@ -15,15 +15,14 @@ public class Driver {
 		System.out.println("New Deck: " + newDeck);
 		players = new Player[numPlayers];
 		for(int i=0; i<numPlayers; i++){
-			players[i] = new Player();
+			players[i] = new Player(i);
 			players[i].draw(newDeck);
 		}
 			 
 		for (Player currentPlayer : players){
 			while(newDeck.hasCards()){
 				currentPlayer.draw(newDeck);
-				System.out.println(currentPlayer + "\n-plays-");
-				System.out.println(currentPlayer.play());
+				System.out.println(currentPlayer + "\n\tPlays: " + currentPlayer.play());
 			}
 		}
 	}
