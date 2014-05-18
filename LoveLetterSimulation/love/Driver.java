@@ -6,12 +6,13 @@ public class Driver {
 	
 	public static void main(String[] args) {
 		System.out.println("Hello World");
+		new Driver(4);
 	}
 	
-	public Driver()
+	public Driver(int numPlayers)
 	{
 		Deck newDeck = new Deck();
-		players = new Player[4];
+		players = new Player[numPlayers];
 	}
 
 }
