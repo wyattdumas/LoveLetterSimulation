@@ -12,11 +12,15 @@ public class Player {
 	}
 	
 	public void draw(Deck drawPile){
-		//hand.add(drawPile.drawTopCard());		
+		hand.add(drawPile.drawTopCard());		
 	}
 	
 	public void play(){		
 		System.out.println(hand.remove(0));
 	}	
+	
+	public String toString(){
+		return "Player: " + position + "\nHand: " + hand;
+	}
 	
 }
