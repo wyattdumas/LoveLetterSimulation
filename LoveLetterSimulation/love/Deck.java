@@ -23,12 +23,12 @@ public class Deck {
 		
 	}
 	
-	private void Shuffle()
+	private void shuffle()
 	{
 		
 	}
 	
-	public Card DrawTopCard()
+	public Card drawTopCard()
 	{
 		Card topCard = available.remove(0);
 		return topCard;
