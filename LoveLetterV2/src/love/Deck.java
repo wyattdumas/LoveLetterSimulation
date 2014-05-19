@@ -2,37 +2,29 @@ package love;
 
 import java.util.Collections;
 import java.util.Vector;
-import love.CardTypes.*;
 
 public class Deck {
-
-	private int totalCards = 16;
+	
 	private int discardCards;
 	private Vector<Card> available = new Vector<Card>();
 	private Vector<Card> discard = new Vector<Card>();
+	private Vector<Card> allCards = new Vector<Card>();
+
+	public Vector<Card> getAllCards() {
+		return allCards;
+	}
 
 	public Deck(int numPlayers) {
-		for (int i = 0; i < totalCards; i++) {
-			if (i <= 4)
-				available.add(new Guard(i));
-			else if (i > 4 && i <= 6)
-				available.add(new Priest(i));
-			else if (i > 6 && i <= 8)
-				available.add(new Baron(i));
-			else if (i > 8 && i <= 10)
-				available.add(new Handmaid(i));
-			else if (i > 10 && i <= 12)
-				available.add(new Prince(i));
-			else if (i == 13)
-				available.add(new King(i));
-			else if (i == 14)
-				available.add(new Countess(i));
-			else if (i == 15)
-				available.add(new Princess(i));
-
+		int cardNumber = 0;
+		for(CardType type: CardType.values()) {
+			for(int i = 0; i < type.getOccurences();i++) {
+				available.add(new Card(cardNumber,type));
+				cardNumber++;
+			}			
 		}
-
-		shuffle();
+		allCards.addAll(available);
+		
+		Collections.shuffle(available);
 
 		if (numPlayers == 2) {
 			discardCards = 4;
@@ -44,10 +36,6 @@ public class Deck {
 			discard.add(drawTopCard());
 		}
 
-	}
-
-	private void shuffle() {
-		Collections.shuffle(available);
 	}
 
 	public Card drawTopCard() {
