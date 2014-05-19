@@ -10,9 +10,7 @@ public class Deck {
 	private Vector<Card> discard = new Vector<Card>();
 	private Vector<Card> allCards = new Vector<Card>();
 
-	public Vector<Card> getAllCards() {
-		return allCards;
-	}
+	
 
 	public Deck(int numPlayers) {
 		int cardNumber = 0;
@@ -36,6 +34,14 @@ public class Deck {
 			discard.add(drawTopCard());
 		}
 
+	}
+	
+	public Vector<Card> getAllCards() {
+		return allCards;
+	}
+	
+	public int getNumAvailable() {
+		return available.size();
 	}
 
 	public Card drawTopCard() {
