@@ -8,10 +8,12 @@ public class Driver {
 	private int numCurrentPlayer;
 
 	public static void main(String[] args) {
-		System.out.println("Start of Program");
-		for(int i = 0; i < 1000; i++)
+		
+		for(int i = 0; i < 1000; i++) {
+			System.out.println("Start of Game");		
 			new Driver(2);
-		System.out.println("End of Program");
+			System.out.println("End of Game");
+		}
 	}
 
 	public Driver(int numPlayers) {
@@ -63,7 +65,7 @@ public class Driver {
 		for (Player currentPlayer : players) {
 			if (currentPlayer.isActive())
 				System.out.println("\n\nPlayer: " + currentPlayer
-						+ "\nHAS WON!");
+						+ "\nHAS WON!\n\n");
 		}
 
 	}
