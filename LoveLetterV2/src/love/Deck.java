@@ -45,7 +45,11 @@ public class Deck {
 	}
 
 	public Card drawTopCard() {
-		Card topCard = available.remove(0);
+		Card topCard;
+		if(available.size() != 0)
+			topCard = available.remove(0);
+		else //Special circumstance forced to draw and no cards left
+			topCard = discard.remove(0);
 		return topCard;
 	}
 
