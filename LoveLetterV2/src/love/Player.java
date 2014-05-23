@@ -13,7 +13,7 @@ public class Player {
 
 	private Card cardInHand;
 	private Vector<Card> discardPile = new Vector<Card>();
-	private HashMap<Player, CardType> knownCards = new HashMap<Player, CardType>();
+	private HashMap<Player, CardType> knownCards = new HashMap<Player, CardType>(); // Clever implementation JP!
 	private int position;
 	private Random rng = new Random();
 	private boolean active = true;
@@ -62,6 +62,27 @@ public class Player {
 		knownCards.put(target, type);
 	}
 	/**
+	 * For use with Priest and other deductive methods
+	 * @param target the pPlayer whose hand it is that this method checks against
+	 * @param type the CardType that <code>target</code> is suspected to have
+	 * @return whether this Player knows that Player has that CardType
+	 */
+	public boolean iKNowWhatCardYouHave(Player target, CardType type){
+		if (!knownCards.isEmpty()){
+			if (knownCards.get(target).compareTo(type) == 0){
+				return true;
+			}
+		}
+		return false;
+	}
+	/**
+	 * Used when a Player can no longer reasonably deduce what another Player has in his/her hand
+	 * @param target the player whom this Player no longer knows about
+	 */
+	public void removeKnownCard(Player target){
+		knownCards.remove(target);	
+	}
+	/**
 	 * Handles Player AI
 	 * @param allPlayers the Players in this game
 	 * @param currentDeck the Deck in this game
@@ -71,7 +92,7 @@ public class Player {
 
 		allPlayers.remove(this);
 
-		Vector<Player> toDelete = new Vector<Player>();
+		Vector<Player> toDelete = new Vector<Player>(); // Yo JP should this be done at then end of this method instead?
 		for (Player currentPlayer : allPlayers) {
 			if (!currentPlayer.isActive() || currentPlayer.isDefended())
 				toDelete.add(currentPlayer);
@@ -114,7 +135,7 @@ public class Player {
 					target = allPlayers.firstElement();
 			}
 		}
-
+		this.updatePlayerKnowledgePerDiscard(allPlayers, playedCard);
 		playedCard.Play(currentDeck, this, target, guess);
 		return playedCard;
 	}
@@ -173,6 +194,20 @@ public class Player {
 	 */
 	public String toString() {
 		return "Player: " + position + "\n\tCard In Hand: " + cardInHand;
+	}
+	/**
+	 * When a player plays a card, other players update their knownCards.
+	 * @param allPlayers the Players still in the round
+	 * @param playedCard the Card that this Player played
+	 */
+	private void updatePlayerKnowledgePerDiscard(Vector<Player> allPlayers, Card playedCard){
+		for (Player opponent: allPlayers){
+			if (opponent.getPosition() != this.getPosition()){ // Make sure opponent isn't the current player
+				if (opponent.iKNowWhatCardYouHave(this, playedCard.getType())){
+					opponent.removeKnownCard(this);
+				}
+			}
+		}		
 	}
 
 }

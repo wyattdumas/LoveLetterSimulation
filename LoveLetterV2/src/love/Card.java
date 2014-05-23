@@ -118,6 +118,7 @@ public class Card {
 				System.out.println("Princess on myself");
 				break;			
 		}
+		
 		return this;
 	}
 	
