@@ -6,7 +6,7 @@ import java.util.Vector;
  * @author jpolonsky
  *
  */
-public class Driver {
+public class Game {
 
 	private Vector<Player> players = new Vector<Player>();
 	private int numCurrentPlayer;
@@ -18,7 +18,7 @@ public class Driver {
 		
 		for(int i = 0; i < 1000; i++) {
 			System.out.println("Start of Game");		
-			new Driver(2);
+			new Game(2);
 			System.out.println("End of Game");
 		}
 	}
@@ -26,7 +26,7 @@ public class Driver {
 	 * Runs one complete simulation of the game of Love Letter
 	 * @param numPlayers used determine how many Players should be set up as well as qualities of the Deck and discard pile
 	 */
-	public Driver(int numPlayers) {
+	public Game(int numPlayers) {
 		Deck newDeck = new Deck(numPlayers);
 		System.out.println("New Deck: " + newDeck);
 		for (int i = 0; i < numPlayers; i++) {
