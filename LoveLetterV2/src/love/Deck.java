@@ -11,12 +11,12 @@ import java.util.Vector;
  *
  */
 public class Deck {
-
-	private int discardCards;
+	
 	private Vector<Card> available = new Vector<Card>();
-	private Vector<Card> discard = new Vector<Card>();
+	private Vector<Card> hidden = new Vector<Card>();
 	private Vector<Card> allCards = new Vector<Card>();
-
+	private Vector<Card> discard = new Vector<Card>();
+	private Vector<CardType> typeRemaining = new Vector<CardType>(); 
 	
 	/** Discards varied numbers of cards based on <code>numPlayers</code>
 	 * 
@@ -24,11 +24,14 @@ public class Deck {
 	 */
 	public Deck(int numPlayers) {
 		int cardNumber = 0;
+		int discardCards = 0;
+		
 		for(CardType type: CardType.values()) {
 			for(int i = 0; i < type.getOccurences();i++) {
 				available.add(new Card(cardNumber,type));
 				cardNumber++;
-			}			
+			}
+			typeRemaining.add(type);
 		}
 		allCards.addAll(available);
 		
@@ -41,7 +44,7 @@ public class Deck {
 		}
 
 		for (int i = 0; i < discardCards; i++) {
-			discard.add(drawTopCard());
+			hidden.add(drawTopCard());
 		}
 
 	}
@@ -59,6 +62,19 @@ public class Deck {
 	public int getNumAvailable() {
 		return available.size();
 	}
+	
+	/**
+	 * 
+	 * @return The known remaining amount of a specific type of card
+	 */
+	public int getTypeRemaining(CardType type) {
+		for(CardType typeInDeck: typeRemaining) {
+			if(typeInDeck.getTitle() == type.getTitle())
+				return typeInDeck.getRemaining();
+		}
+		return -1;
+	}
+	
 	/** 
 	 * 
 	 * @return The card at index 0 in the vector of available cards
@@ -68,7 +84,7 @@ public class Deck {
 		if(available.size() != 0)
 			topCard = available.remove(0);
 		else //Special circumstance forced to draw and no cards left
-			topCard = discard.remove(0);
+			topCard = hidden.remove(0);
 		return topCard;
 	}
 	/**
@@ -77,6 +93,11 @@ public class Deck {
 	 */
 	public boolean hasCards() {
 		return !available.isEmpty();
+	}
+	
+	public boolean discard(Card played) {
+		played.getType().decreaseRemaining();
+		return discard.add(played);
 	}
 
 	/**
@@ -100,8 +121,8 @@ public class Deck {
 			output += "\t" + available.elementAt(i) + "\n";
 		}
 		output += "Discard Pile \n";
-		for (int i = 0; i < discard.size(); i++) {
-			output += "\t" + discard.elementAt(i) + "\n";
+		for (int i = 0; i < hidden.size(); i++) {
+			output += "\t" + hidden.elementAt(i) + "\n";
 		}
 		return output;
 	}

@@ -14,7 +14,8 @@ public enum CardType {
     COUNTESS(1,7,"Countess"),
     PRINCESS(1,8,"Princess");
     
-    private int occurences; 
+    private int occurences;
+    private int remaining;
 	private int value;
 	private String title;	
 	/**
@@ -26,11 +27,22 @@ public enum CardType {
 	private CardType(int occurrence, int value, String title) {
 		this.value = value;
 		this.occurences = occurrence;
+		this.remaining = occurrence;
 		this.title = title;
 	}
+	
+	public int getRemaining() {
+		return remaining;
+	}
+	
+	public void decreaseRemaining() {
+		if(this.remaining > 0) 
+			--this.remaining;		
+	}
+	
 	/**
 	 * 
-	 * @return the frequency with which tis Card appears in a standard Deck
+	 * @return the frequency with which this Card appears in a standard Deck
 	 */
     public int getOccurences() {
 		return occurences;

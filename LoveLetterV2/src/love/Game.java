@@ -30,9 +30,10 @@ public class Game {
 		Deck newDeck = new Deck(numPlayers);
 		System.out.println("New Deck: " + newDeck);
 		for (int i = 0; i < numPlayers; i++) {
-			Player newPlayer = new Player(i, numPlayers);
+			Player newPlayer = new Player(i, numPlayers, newDeck);
 			players.add(newPlayer);
-			newPlayer.draw(newDeck);
+			Card drawnCard = newDeck.drawTopCard();
+			newPlayer.setHand(drawnCard);			
 		}
 
 		while (newDeck.hasCards() && getActivePlayers() > 1) {
@@ -43,8 +44,11 @@ public class Game {
 				System.out.println("\n" + currentPlayer);
 				Vector<Player> copyOfPlayers = new Vector<Player>();
 				copyOfPlayers.addAll(players);
+				
+				//Handmaid no longer applies if you are on your own turn
+				currentPlayer.setDefended(false);
 				System.out.println("\tPlays: "
-						+ currentPlayer.play(copyOfPlayers, newDeck));
+						+ currentPlayer.play(copyOfPlayers));
 			}
 
 			numCurrentPlayer++;
@@ -62,9 +66,9 @@ public class Game {
 						if (comparePlayer.isActive()) {
 							Card compareCard = comparePlayer.getCardInHand();
 							if (compareCard.getValue() > currentCard.getValue())
-								currentPlayer.Lose();
+								currentPlayer.lose();
 							else if (compareCard.getValue() < currentCard.getValue())
-								comparePlayer.Lose();
+								comparePlayer.lose();
 						}
 					}
 				}

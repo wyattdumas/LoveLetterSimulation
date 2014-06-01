@@ -12,7 +12,7 @@ public class Card {
 	/**
 	 * 
 	 * @param num The number of this kind of card in a deck
-	 * @param type The kinf of card, e.g. Baron, or Princess
+	 * @param type The kind of card, e.g. Baron, or Princess
 	 */
 	public Card(int num, CardType type) {
 		number = num;
@@ -71,7 +71,7 @@ public class Card {
 		if(targetHand.getType() == guess && guess != CardType.GUARD) {
 			System.out.println("Guard Guessed Correctly against:" + target);
 			target.discardHand();
-			target.Lose();					
+			target.lose();					
 		}
 		
 		return this;
@@ -124,11 +124,11 @@ public class Card {
 		if(targetHand.getValue() > myHand.getValue()) {
 			System.out.println("Baron Lost against:" + target);
 			me.discardHand();
-			me.Lose();					
+			me.lose();					
 		} else if(myHand.getValue() > targetHand.getValue()) {
 			System.out.println("Baron Won against:" + target);
 			target.discardHand();
-			target.Lose();					
+			target.lose();					
 		}
 		
 		return this;
@@ -147,7 +147,7 @@ public class Card {
 							
 		me.addToDiscard(this);		
 		
-		me.setDefended();
+		me.setDefended(true);
 		System.out.println("Handmaid on:" + me);
 		
 		return this;
@@ -172,10 +172,11 @@ public class Card {
 		System.out.println("Prince on:" + target);
 		Card discard = target.discardHand();
 		if(discard.getType() == CardType.PRINCESS)
-			target.Lose();
-		else					
-			target.draw(currentDeck);						
-		
+			target.lose();
+		else {
+			Card drawnCard = currentDeck.drawTopCard();
+			target.setHand(drawnCard);			
+		}
 		return this;
 	}
 	
@@ -237,7 +238,7 @@ public class Card {
 		
 		me.addToDiscard(this);
 		
-		me.Lose();
+		me.lose();
 		System.out.println("Princess on myself");
 		
 		return this;

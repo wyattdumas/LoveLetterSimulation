@@ -14,8 +14,9 @@ import java.util.*;
  */
 public class Player {
 
-	private Card cardInHand;
-	private Vector<Card> discardPile = new Vector<Card>();
+	//Go back to vector to make sure this is handled properly
+	private Vector<Card> cardsInHand = new Vector<Card>();	
+	private Deck gameDeck;
 	private HashMap<Player, CardType> knownCards = new HashMap<Player, CardType>(); // Clever
 																					// implementation
 																					// JP!
@@ -31,19 +32,9 @@ public class Player {
 	 * @param numPlayers
 	 *            total number of players at the table
 	 */
-	public Player(int order, int numPlayers) {
+	public Player(int order, int numPlayers, Deck currentDeck) {
 		position = order;
-	}
-
-	/**
-	 * Removes the card at index 0 in the available vector for this
-	 * <code>drawPile</code> and puts it into this Player's hand
-	 * 
-	 * @param drawPile
-	 *            the deck for this game
-	 */
-	public void draw(Deck drawPile) {
-		cardInHand = drawPile.drawTopCard();
+		gameDeck = currentDeck;
 	}
 
 	/**
@@ -52,9 +43,13 @@ public class Player {
 	 * @return the Card that was in this player's hand
 	 */
 	public Card discardHand() {
-		Card discardCard = cardInHand;
-		cardInHand = null;
-		return discardCard;
+		if(cardsInHand.size() != 1) {
+			System.out.println("Error discardHand");
+			System.exit(-1);
+		}
+		Card discard = cardsInHand.remove(0);
+		addToDiscard(discard);
+		return discard;
 	}
 
 	/**
@@ -64,13 +59,14 @@ public class Player {
 	 *            Player.
 	 */
 	public void addToDiscard(Card currentCard) {
-		discardPile.add(currentCard);
+		cardsInHand.remove(currentCard);
+		gameDeck.discard(currentCard);
 	}
 
 	/**
 	 * 
 	 * @param target
-	 *            a PLayer about whom this Player has learned something (for use
+	 *            a Player about whom this Player has learned something (for use
 	 *            with Priest)
 	 * @param type
 	 *            the Card type that player has in hand
@@ -115,12 +111,11 @@ public class Player {
 	 * 
 	 * @param allPlayers
 	 *            the Players in this game
-	 * @param currentDeck
-	 *            the Deck in this game
 	 * @return the Card that the Player decides to discard
 	 */
-	public Card play(Vector<Player> allPlayers, Deck currentDeck) {
+	public Card play(Vector<Player> allPlayers) {
 
+		//Take the list of players and remove ones that are no longer in play
 		allPlayers.remove(this);
 
 		Vector<Player> toDelete = new Vector<Player>(); // Yo JP should this be
@@ -134,30 +129,33 @@ public class Player {
 			allPlayers.remove(deletePlayer);
 		}
 
-		Card drawnCard = currentDeck.drawTopCard();
+		//Start your turn
+		Card drawnCard = gameDeck.drawTopCard();
+		Card inHand = this.getCardInHand();
+		cardsInHand.add(drawnCard);
 		System.out.println("\tDrawn Card:" + drawnCard);
+		
 		Card playedCard;
-		int randInt;
+		
 		CardType guess;
 		Player target = null;
 
 		// Basic Logic, Don't Play the princess otherwise you lose
 		if (drawnCard.getType() == CardType.PRINCESS) {
-			playedCard = cardInHand;
-			cardInHand = drawnCard;
+			playedCard = inHand;			
 			guess = CardType.COUNTESS;
 			if (allPlayers.size() > 0)
 				target = allPlayers.firstElement();
-		} else if (cardInHand.getType() == CardType.PRINCESS) {
+		} else if (inHand.getType() == CardType.PRINCESS) {
 			playedCard = drawnCard;
 			guess = CardType.COUNTESS;
 			if (allPlayers.size() > 0)
 				target = allPlayers.firstElement();
 		} else {
+			int randInt;
 			randInt = rng.nextInt(2);
 			if (randInt == 0) {
-				playedCard = cardInHand;
-				cardInHand = drawnCard;
+				playedCard = inHand;				
 				guess = CardType.PRINCESS;
 				if (allPlayers.size() > 0)
 					target = allPlayers.firstElement();
@@ -169,10 +167,10 @@ public class Player {
 			}
 		}
 		this.updatePlayerKnowledgePerDiscard(allPlayers, playedCard);
-		
-		if(target == null)
+
+		if (target == null)
 			target = this;
-		
+
 		try {
 			switch (playedCard.getType()) {
 			case GUARD:
@@ -188,7 +186,7 @@ public class Player {
 				playedCard.playHandmaid(this);
 				break;
 			case PRINCE:
-				playedCard.playPrince(currentDeck,this, target);
+				playedCard.playPrince(gameDeck, this, target);
 				break;
 			case KING:
 				playedCard.playKing(this, target);
@@ -211,7 +209,7 @@ public class Player {
 	/**
 	 * Sets this Player to inactive
 	 */
-	public void Lose() {
+	public void lose() {
 		active = false;
 	}
 
@@ -228,7 +226,12 @@ public class Player {
 	 * @return the Card in this Player's hand
 	 */
 	public Card getCardInHand() {
-		return cardInHand;
+		if(cardsInHand.size() != 1) {
+			System.out.println("Error getCardInHand");
+			System.exit(-1);
+		}
+		
+		return cardsInHand.elementAt(0);
 	}
 
 	/**
@@ -238,7 +241,8 @@ public class Player {
 	 *            the card to put into this Player's hand
 	 */
 	public void setHand(Card activeCard) {
-		cardInHand = activeCard;
+		cardsInHand.removeAllElements();
+		cardsInHand.add(activeCard);		
 	}
 
 	/**
@@ -260,8 +264,8 @@ public class Player {
 	/**
 	 * For use when a defensive Card e.g. Handmaid is played
 	 */
-	public void setDefended() {
-		this.defended = true;
+	public void setDefended(boolean isDefended) {
+		this.defended = isDefended;
 	}
 
 	/**
@@ -272,7 +276,7 @@ public class Player {
 	 * </pre>
 	 */
 	public String toString() {
-		return "Player: " + position + "\n\tCard In Hand: " + cardInHand;
+		return "Player: " + position + "\n\tCard In Hand: " + cardsInHand.elementAt(0);
 	}
 
 	/**
